@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AgriWaste · Smart Agriculture Waste Management</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--forest:#17402E;--moss:#2F6B4F;--leaf:#5E9E6E;--wheat:#E3A83B;--paper:#F2F5EF;--card:#fff;--ink:#1B2A22;--mute:#66756C;--line:#DDE5DB;--bad:#B3402F;
+--r:14px;font-family:Figtree,system-ui,sans-serif;color:var(--ink)}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);min-height:100vh}
+h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif;margin:0;letter-spacing:-.02em}
+button,input,select,textarea{font:inherit}
+:focus-visible{outline:3px solid var(--wheat);outline-offset:2px}
+.btn{border:0;border-radius:10px;padding:.7rem 1.1rem;font-weight:600;cursor:pointer;background:var(--forest);color:#fff;transition:background .15s}
+.btn:hover{background:var(--moss)}.btn.alt{background:#fff;color:var(--forest);border:1px solid var(--line)}.btn.alt:hover{background:var(--paper)}
+.btn.sm{padding:.4rem .75rem;font-size:.85rem}.btn.wheat{background:var(--wheat);color:#2a1d00}
+label{display:block;font-size:.85rem;font-weight:600;margin:0 0 .35rem}
+input,select,textarea{width:100%;padding:.7rem .85rem;border:1px solid var(--line);border-radius:10px;background:#fff}
+.field{margin-bottom:1rem}.row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.hide{display:none!important}
+/* auth */
+#auth{display:grid;grid-template-columns:1.1fr 1fr;min-height:100vh}
+.hero{background:linear-gradient(160deg,var(--forest),#0F2C20);color:#fff;padding:4rem;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.hero svg{position:absolute;right:-60px;bottom:-40px;width:420px;opacity:.14}
+.hero h1{font-size:clamp(2.2rem,4vw,3.4rem);line-height:1.05;max-width:12ch;font-weight:800}
+.hero p{max-width:40ch;color:#C7DACB;line-height:1.6}
+.logo{display:flex;gap:.6rem;align-items:center;font-family:'Bricolage Grotesque';font-weight:800;font-size:1.25rem}
+.logo i{width:32px;height:32px;border-radius:9px;background:var(--wheat);display:grid;place-items:center;font-style:normal}
+.stats-strip{display:flex;gap:2rem;font-size:.9rem;color:#C7DACB}.stats-strip b{display:block;color:#fff;font-size:1.5rem;font-family:'Bricolage Grotesque'}
+.formwrap{display:grid;place-items:center;padding:2rem}.formbox{width:100%;max-width:400px}
+.tabs{display:flex;gap:.25rem;background:#E6ECE3;padding:.25rem;border-radius:12px;margin:1.2rem 0}
+.tabs button{flex:1;border:0;background:none;padding:.55rem;border-radius:9px;font-weight:600;cursor:pointer;color:var(--mute)}.tabs .on{background:#fff;color:var(--forest);box-shadow:0 1px 3px #0002}
+.demo{margin-top:1.4rem;padding:1rem;border:1px dashed var(--leaf);border-radius:var(--r);background:#EAF3EA}
+.demo p{margin:0 0 .6rem;font-size:.85rem;color:var(--moss);font-weight:600}.demo div{display:flex;gap:.5rem;flex-wrap:wrap}
+.err{color:var(--bad);font-size:.88rem;min-height:1.2rem;margin:.3rem 0}
+/* app */
+#app{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
+aside{background:var(--forest);color:#fff;padding:1.4rem 1rem;display:flex;flex-direction:column;gap:.25rem;position:sticky;top:0;height:100vh}
+aside .logo{padding:0 .5rem 1.5rem}
+.nav{display:flex;gap:.7rem;align-items:center;padding:.7rem .8rem;border-radius:10px;color:#C7DACB;background:none;border:0;text-align:left;cursor:pointer;font-weight:500}
+.nav:hover{background:#ffffff14}.nav.on{background:#fff;color:var(--forest);font-weight:600}
+.me{margin-top:auto;padding:.8rem;border-top:1px solid #ffffff22;font-size:.85rem}.me small{color:#9DB8A5;display:block}
+main{padding:2rem 2.4rem;max-width:1200px;width:100%}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.6rem;gap:1rem}
+.top h2{font-size:1.8rem}.top p{margin:.2rem 0 0;color:var(--mute)}
+.bell{position:relative}.bell b{position:absolute;top:-6px;right:-6px;background:var(--bad);color:#fff;font-size:.7rem;border-radius:99px;padding:1px 6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:1.4rem}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.2rem}
+.stat span{color:var(--mute);font-size:.85rem}.stat strong{display:block;font-family:'Bricolage Grotesque';font-size:2rem;margin:.3rem 0 0}
+.stat.lead{background:var(--forest);color:#fff;border:0}.stat.lead span{color:#B6D0BC}
+.two{display:grid;grid-template-columns:1.2fr 1fr;gap:1.2rem}
+.bar{display:grid;grid-template-columns:130px 1fr 70px;gap:.7rem;align-items:center;margin:.7rem 0;font-size:.9rem}
+.bar i{display:block;height:12px;border-radius:99px;background:linear-gradient(90deg,var(--moss),var(--leaf))}.bar div{background:#EEF2EC;border-radius:99px}
+table{width:100%;border-collapse:collapse;font-size:.92rem}th{text-align:left;color:var(--mute);font-weight:500;padding:.6rem;border-bottom:1px solid var(--line)}td{padding:.8rem .6rem;border-bottom:1px solid var(--line);vertical-align:middle}
+.pill{padding:.2rem .65rem;border-radius:99px;font-size:.78rem;font-weight:600;white-space:nowrap}
+.pending{background:#FCEFD2;color:#8A5E00}.accepted{background:#DDEBF7;color:#1F5C8F}.scheduled{background:#E7E0F6;color:#5B3FA0}.collected{background:#D9F0DF;color:#1F6B3A}.recycled{background:var(--forest);color:#fff}
+.tip{background:#FFF6E0;border-left:4px solid var(--wheat);padding:.9rem 1rem;border-radius:8px;margin:.5rem 0 1rem;font-size:.92rem}
+.guide{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1rem}.guide h3{font-size:1.1rem}.guide em{color:var(--moss);font-style:normal;font-weight:600;font-size:.85rem}
+.empty{text-align:center;color:var(--mute);padding:2.5rem 1rem}
+#notes{position:absolute;right:2.4rem;top:5rem;width:330px;z-index:5;box-shadow:0 12px 40px #0002}
+#notes p{margin:0;padding:.65rem 0;border-bottom:1px solid var(--line);font-size:.9rem}
+#toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:.8rem 1.3rem;border-radius:10px;opacity:0;pointer-events:none;transition:.25s}#toast.show{opacity:1}
+@media(max-width:900px){#auth{grid-template-columns:1fr}.hero{display:none}#app{grid-template-columns:1fr}aside{position:static;height:auto;flex-direction:row;overflow-x:auto;padding:.6rem}aside .logo,.me{display:none}.nav{white-space:nowrap}main{padding:1.2rem}.grid4{grid-template-columns:1fr 1fr}.two,.row{grid-template-columns:1fr}.bar{grid-template-columns:90px 1fr 60px}.table{overflow-x:auto}#notes{right:1rem;left:1rem;width:auto}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body>
+
+<section id="auth">
+  <div class="hero">
+    <div class="logo"><i>🌾</i>AgriWaste</div>
+    <div><h1>Turn farm waste into value.</h1><p>Report straw, husk and crop residue, request a pickup, and see it composted, turned into biogas or recycled.</p></div>
+    <div class="stats-strip"><div><b>6</b>waste categories</div><div><b>4</b>recycling routes</div><div><b>Live</b>pickup tracking</div></div>
+    <svg viewBox="0 0 200 200" fill="#fff"><path d="M100 10c30 30 30 70 0 100-30-30-30-70 0-100zM40 60c35 5 55 35 50 70-35-5-55-35-50-70zM160 60c-35 5-55 35-50 70 35-5 55-35 50-70zM96 110h8v90h-8z"/></svg>
+  </div>
+  <div class="formwrap"><div class="formbox">
+    <h2>Welcome back</h2><div class="tabs"><button id="tLogin" class="on">Sign in</button><button id="tReg">Create account</button></div>
+    <form id="authForm">
+      <div id="regOnly" class="hide"><div class="field"><label for="name">Full name</label><input id="name"></div>
+      <div class="row"><div class="field"><label for="phone">Phone</label><input id="phone"></div><div class="field"><label for="role">I am a</label><select id="role"><option value="farmer">Farmer</option><option value="worker">Collection worker</option></select></div></div></div>
+      <div class="field"><label for="email">Email</label><input id="email" type="email" required></div>
+      <div class="field"><label for="password">Password</label><input id="password" type="password" required minlength="6"></div>
+      <div class="err" id="err" role="alert"></div>
+      <button class="btn" style="width:100%" id="authBtn">Sign in</button>
+    </form>
+    <div class="demo"><p>Try it now with a demo account</p><div>
+      <button class="btn alt sm" data-demo="farmer@demo.com">Farmer</button><button class="btn alt sm" data-demo="worker@demo.com">Collection worker</button><button class="btn alt sm" data-demo="admin@demo.com">Admin</button></div></div>
+  </div></div>
+</section>
+
+<div id="app" class="hide">
+  <aside><div class="logo"><i>🌾</i>AgriWaste</div><nav id="nav" style="display:contents"></nav>
+    <div class="me"><b id="meName"></b><small id="meRole"></small><button class="btn alt sm" id="logout" style="margin-top:.6rem">Sign out</button></div></aside>
+  <main><div class="top"><div><h2 id="title"></h2><p id="sub"></p></div><button class="btn alt bell" id="bell">🔔 Notifications<b id="badge" class="hide"></b></button></div>
+    <div id="notes" class="card hide"></div><div id="view"></div></main>
+</div>
+<div id="toast" role="status"></div>
+
+<script>
+const $=s=>document.querySelector(s),api=async(p,m='GET',b)=>{const r=await fetch('/api'+p,{method:m,headers:{'Content-Type':'application/json',Authorization:'Bearer '+(localStorage.tok||'')},body:b?JSON.stringify(b):undefined});const d=await r.json().catch(()=>({}));if(r.status===401&&localStorage.tok)out();if(!r.ok)throw new Error(d.error||'Something went wrong');return d};
+let me=null,cats=[],page='dashboard',mode='login';
+const toast=t=>{const e=$('#toast');e.textContent=t;e.className='show';setTimeout(()=>e.className='',2600)};
+const kg=n=>Number(n||0).toLocaleString()+' kg',pill=s=>`<span class="pill ${s}">${s[0].toUpperCase()+s.slice(1)}</span>`;
+const menus={farmer:[['dashboard','📊','Dashboard'],['new','➕','Request pickup'],['requests','📦','My requests'],['guide','♻️','Recycling guide']],
+ worker:[['dashboard','📊','Dashboard'],['requests','🚚','Collections'],['reports','📈','Reports'],['guide','♻️','Recycling guide']],
+ admin:[['dashboard','📊','Dashboard'],['requests','📦','All requests'],['users','👥','Users'],['reports','📈','Reports'],['guide','♻️','Recycling guide']]};
+const titles={dashboard:['Dashboard','Your waste at a glance'],new:['Request a pickup','Tell us what you have and where to find it'],requests:['Requests','Track every collection'],guide:['Recycling guide','What happens to each type of waste'],reports:['Reports & analytics','How collection and recycling are going'],users:['Users','Manage accounts']};
+
+$('#tLogin').onclick=()=>setMode('login');$('#tReg').onclick=()=>setMode('reg');
+function setMode(m){mode=m;$('#regOnly').classList.toggle('hide',m==='login');$('#tLogin').className=m==='login'?'on':'';$('#tReg').className=m==='reg'?'on':'';$('#authBtn').textContent=m==='login'?'Sign in':'Create account';$('#err').textContent=''}
+$('#authForm').onsubmit=async e=>{e.preventDefault();try{
+ if(mode==='reg'){await api('/register','POST',{name:name.value,phone:phone.value,role:role.value,email:email.value,password:password.value});toast('Account created. Signing you in…')}
+ await signin(email.value,password.value)}catch(x){$('#err').textContent=x.message}};
+document.querySelectorAll('[data-demo]').forEach(b=>b.onclick=()=>signin(b.dataset.demo,'demo123').catch(x=>$('#err').textContent=x.message));
+async function signin(e,p){const d=await api('/login','POST',{email:e,password:p});localStorage.tok=d.token;localStorage.me=JSON.stringify(d.user);me=d.user;start()}
+function out(){localStorage.removeItem('tok');location.reload()}$('#logout').onclick=out;
+async function start(){$('#auth').classList.add('hide');$('#app').classList.remove('hide');$('#meName').textContent=me.name;$('#meRole').textContent=me.role;
+ cats=await api('/categories');$('#nav').innerHTML=menus[me.role].map(([k,i,t])=>`<button class="nav" data-p="${k}">${i} ${t}</button>`).join('');
+ document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>go(b.dataset.p));go('dashboard');pollNotes();setInterval(pollNotes,30000)}
+async function go(p){page=p;document.querySelectorAll('.nav').forEach(b=>b.classList.toggle('on',b.dataset.p===p));$('#title').textContent=titles[p][0];$('#sub').textContent=titles[p][1];$('#notes').classList.add('hide');
+ $('#view').innerHTML='<p class="empty">Loading…</p>';try{await views[p]()}catch(x){$('#view').innerHTML=`<p class="empty">${x.message}</p>`}}
+async function pollNotes(){try{const n=await api('/notifications');window._n=n;const u=n.filter(x=>!x.is_read).length;$('#badge').textContent=u;$('#badge').classList.toggle('hide',!u)}catch{}}
+$('#bell').onclick=async()=>{const b=$('#notes');b.classList.toggle('hide');if(b.classList.contains('hide'))return;
+ b.innerHTML='<h3 style="margin-bottom:.5rem">Notifications</h3>'+((window._n||[]).map(n=>`<p>${n.is_read?'':'🟢 '}${n.message}</p>`).join('')||'<p class="empty">Nothing new yet.</p>');await api('/notifications/read','POST');$('#badge').classList.add('hide')};
+
+const views={
+async dashboard(){const[s,r]=await Promise.all([api('/dashboard'),api('/requests')]);const by={};r.forEach(x=>by[x.category]=(by[x.category]||0)+x.quantity_kg);const mx=Math.max(1,...Object.values(by));
+ $('#view').innerHTML=`<div class="grid4"><div class="card stat lead"><span>Total waste reported</span><strong>${kg(s.reported)}</strong></div><div class="card stat"><span>Collected</span><strong>${kg(s.collected)}</strong></div><div class="card stat"><span>Recycled</span><strong>${kg(s.recycled)}</strong></div><div class="card stat"><span>Pending requests</span><strong>${s.pending}</strong></div></div>
+ <div class="two"><div class="card"><h3>Waste by type</h3>${Object.entries(by).map(([k,v])=>`<div class="bar"><span>${k}</span><div><i style="width:${v/mx*100}%"></i></div><b>${kg(v)}</b></div>`).join('')||'<p class="empty">No waste reported yet.</p>'}</div>
+ <div class="card"><h3 style="margin-bottom:.6rem">Latest activity</h3>${r.slice(0,5).map(x=>`<p style="display:flex;justify-content:space-between;margin:.6rem 0"><span>#${x.id} ${x.category}</span>${pill(x.status)}</p>`).join('')||'<p class="empty">No requests yet.</p>'}</div></div>`},
+async new(){$('#view').innerHTML=`<form class="card" id="rf" style="max-width:640px"><div class="row"><div class="field"><label for="cat">Waste type</label><select id="cat">${cats.map(c=>`<option value="${c.id}">${c.name}</option>`).join('')}</select></div>
+ <div class="field"><label for="qty">Quantity (kg)</label><input id="qty" type="number" min="1" step="any" required placeholder="e.g. 500"></div></div><div class="tip" id="tip"></div>
+ <div class="field"><label for="addr">Pickup location</label><input id="addr" required placeholder="Village, road or landmark"></div>
+ <button type="button" class="btn alt sm" id="gps">📍 Use my current location</button> <small id="gpsOut" style="color:var(--mute)"></small>
+ <div class="field" style="margin-top:1rem"><label for="notes2">Notes (optional)</label><textarea id="notes2" rows="2" placeholder="Access instructions, best time…"></textarea></div>
+ <div class="err" id="rerr"></div><button class="btn">Submit request</button></form>`;
+ let pos={};const tip=()=>{const c=cats.find(c=>c.id==cat.value);$('#tip').innerHTML=`<b>Best use: ${c.recycling_method}.</b> ${c.recycling_tip}`};cat.onchange=tip;tip();
+ gps.onclick=()=>navigator.geolocation?navigator.geolocation.getCurrentPosition(p=>{pos={latitude:p.coords.latitude,longitude:p.coords.longitude};gpsOut.textContent=`Saved ${pos.latitude.toFixed(4)}, ${pos.longitude.toFixed(4)}`;if(!addr.value)addr.value='GPS location'},()=>gpsOut.textContent='Location blocked. Type the address instead.'):0;
+ rf.onsubmit=async e=>{e.preventDefault();try{await api('/requests','POST',{category_id:cat.value,quantity_kg:qty.value,address:addr.value,notes:notes2.value,...pos});toast('Request submitted');pollNotes();go('requests')}catch(x){rerr.textContent=x.message}}},
+async requests(){const r=await api('/requests'),w=me.role!=='farmer';
+ const act=x=>{if(w){const n={pending:['accepted','Accept'],accepted:['scheduled','Schedule'],scheduled:['collected','Mark collected'],collected:['recycled','Mark recycled']}[x.status];return n?`<button class="btn sm" onclick="setSt(${x.id},'${n[0]}')">${n[1]}</button>`:'—'}
+  return ['collected','recycled'].includes(x.status)?(x.rating?`${'★'.repeat(x.rating)}`:`<button class="btn alt sm" onclick="rate(${x.id})">Rate service</button>`):'—'};
+ $('#view').innerHTML=`<div class="card table" style="overflow-x:auto">${r.length?`<table><tr><th>#</th>${w?'<th>Farmer</th>':''}<th>Waste</th><th>Quantity</th><th>Location</th><th>Status</th><th>${w?'Action':'Feedback'}</th></tr>${r.map(x=>`<tr><td>${x.id}</td>${w?`<td>${x.farmer}</td>`:''}<td>${x.category}</td><td>${kg(x.quantity_kg)}</td><td>${x.latitude?`<a href="https://maps.google.com/?q=${x.latitude},${x.longitude}" target="_blank" rel="noopener">📍 ${x.address}</a>`:x.address}</td><td>${pill(x.status)}${x.scheduled_date?`<br><small>${x.scheduled_date}</small>`:''}</td><td>${act(x)}</td></tr>`).join('')}</table>`:'<p class="empty">No requests yet. Submit your first pickup request.</p>'}</div>`},
+guide(){$('#view').innerHTML=`<div class="guide">${cats.map(c=>`<div class="card"><h3>${c.name}</h3><em>${c.recycling_method}</em><p style="color:var(--mute);line-height:1.5">${c.recycling_tip}</p></div>`).join('')}</div>`},
+async reports(){const d=await api('/reports'),mx=Math.max(1,...d.by_category.map(x=>x.kg));
+ $('#view').innerHTML=`<div class="two"><div class="card"><h3>Volume by waste type</h3>${d.by_category.map(x=>`<div class="bar"><span>${x.name}</span><div><i style="width:${x.kg/mx*100}%"></i></div><b>${kg(x.kg)}</b></div>`).join('')}</div>
+ <div><div class="card" style="margin-bottom:1rem"><h3>Requests by status</h3><p style="display:flex;gap:.5rem;flex-wrap:wrap">${d.by_status.map(s=>`${pill(s.status)} <b>${s.n}</b>`).join(' &nbsp; ')}</p></div><div class="card stat"><span>Average service rating (${d.rating.n} reviews)</span><strong>${d.rating.avg??'—'} ★</strong></div></div></div>`},
+async users(){const u=await api('/admin/users');$('#view').innerHTML=`<div class="card" style="overflow-x:auto"><table><tr><th>Name</th><th>Email</th><th>Role</th><th></th></tr>${u.map(x=>`<tr><td>${x.name}</td><td>${x.email}</td><td>${x.role}</td><td>${x.id===me.id?'':`<button class="btn alt sm" onclick="delU(${x.id})">Remove</button>`}</td></tr>`).join('')}</table></div>`}};
+async function setSt(id,status){let scheduled_date;if(status==='scheduled'){scheduled_date=prompt('Pickup date (YYYY-MM-DD)',new Date(Date.now()+864e5).toISOString().slice(0,10));if(!scheduled_date)return}
+ try{await api(`/requests/${id}/status`,'PUT',{status,scheduled_date});toast('Status updated · farmer notified');go('requests')}catch(x){toast(x.message)}}
+async function rate(id){const r=+prompt('Rate this collection from 1 (poor) to 5 (excellent)');if(!r)return;const comment=prompt('Any comments? (optional)');try{await api('/feedback','POST',{request_id:id,rating:r,comment});toast('Thanks for your feedback');go('requests')}catch(x){toast(x.message)}}
+async function delU(id){if(confirm('Remove this user and their requests?')){await api('/admin/users/'+id,'DELETE');go('users')}}
+try{me=JSON.parse(localStorage.me||'null')}catch{}
+if(localStorage.tok&&me)start();
+</script></body></html>
