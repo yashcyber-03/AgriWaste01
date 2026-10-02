@@ -95,7 +95,7 @@ table{width:100%;border-collapse:collapse;font-size:.92rem}th{text-align:left;co
 <div id="toast" role="status"></div>
 
 <script>
-const $=s=>document.querySelector(s),api=async(p,m='GET',b)=>{const r=await fetch('/api'+p,{method:m,headers:{'Content-Type':'application/json',Authorization:'Bearer '+(localStorage.tok||'')},body:b?JSON.stringify(b):undefined});const d=await r.json().catch(()=>({}));if(r.status===401&&localStorage.tok)out();if(!r.ok)throw new Error(d.error||'Something went wrong');return d};
+const $=s=>document.querySelector(s),api=async(p,m='GET',b)=>{const r=await fetch('/api'+p,{method:m,headers:{'Content-Type':'application/json',Authorization:'Bearer '+(localStorage.tok||'')},body:b?JSON.stringify(b):undefined});const d=await r.json().catch(()=>({}));if(r.status===401&&localStorage.tok)out();if(!r.ok)throw new Error(d.error||`Server error (${r.status}). The API isn't reachable: run the Flask app or check the Vercel function logs.`);return d};
 let me=null,cats=[],page='dashboard',mode='login';
 const toast=t=>{const e=$('#toast');e.textContent=t;e.className='show';setTimeout(()=>e.className='',2600)};
 const kg=n=>Number(n||0).toLocaleString()+' kg',pill=s=>`<span class="pill ${s}">${s[0].toUpperCase()+s.slice(1)}</span>`;
