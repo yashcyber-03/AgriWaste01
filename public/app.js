@@ -2,7 +2,7 @@ const $=s=>document.querySelector(s),api=async(p,m='GET',b)=>{const r=await fetc
 let me=null,cats=[],page='dashboard',mode='login';
 const toast=t=>{const e=$('#toast');e.textContent=t;e.className='show';setTimeout(()=>e.className='',2600)};
 const kg=n=>Number(n||0).toLocaleString()+' kg',pill=s=>`<span class="pill ${s}">${s[0].toUpperCase()+s.slice(1)}</span>`;
-const menus={farmer:[['dashboard','📊','Dashboard'],['new','➕','Request pickup'],['requests','📦','My requests'],['guide','♻️','Recycling guide']],
+const menus={farmer:[['dashboard','📊','Dashboard'],['new','➕','Request pickup'],['requests','📦','My requests'],['guide','♻️','Recycling guide'],['points','🍃','AgriPoints']],
  worker:[['dashboard','📊','Dashboard'],['requests','🚚','Collections'],['reports','📈','Reports'],['guide','♻️','Recycling guide']],
  admin:[['dashboard','📊','Dashboard'],['requests','📦','All requests'],['users','👥','Users'],['reports','📈','Reports'],['guide','♻️','Recycling guide']]};
 const titles={dashboard:['Dashboard','Your waste at a glance'],new:['Request a pickup','Tell us what you have and where to find it'],requests:['Requests','Track every collection'],guide:['Recycling guide','What happens to each type of waste'],reports:['Reports & analytics','How collection and recycling are going'],users:['Users','Manage accounts']};
@@ -18,7 +18,7 @@ function out(){localStorage.removeItem('tok');location.reload()}$('#logout').onc
 async function start(){$('#auth').classList.add('hide');$('#app').classList.remove('hide');$('#meName').textContent=me.name;$('#meRole').textContent=me.role;
  cats=await api('/categories');$('#nav').innerHTML=menus[me.role].map(([k,i,t])=>`<button class="nav" data-p="${k}">${i} ${t}</button>`).join('');
  document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>go(b.dataset.p));go('dashboard');pollNotes();setInterval(pollNotes,30000)}
-async function go(p){page=p;document.querySelectorAll('.nav').forEach(b=>b.classList.toggle('on',b.dataset.p===p));$('#title').textContent=titles[p][0];$('#sub').textContent=titles[p][1];$('#notes').classList.add('hide');
+async function go(p){if(p==='points'){location.href='/agripoints';return}page=p;document.querySelectorAll('.nav').forEach(b=>b.classList.toggle('on',b.dataset.p===p));$('#title').textContent=titles[p][0];$('#sub').textContent=titles[p][1];$('#notes').classList.add('hide');
  $('#view').innerHTML='<p class="empty">Loading…</p>';try{await views[p]()}catch(x){$('#view').innerHTML=`<p class="empty">${x.message}</p>`}}
 async function pollNotes(){try{const n=await api('/notifications');window._n=n;const u=n.filter(x=>!x.is_read).length;$('#badge').textContent=u;$('#badge').classList.toggle('hide',!u)}catch{}}
 $('#bell').onclick=async()=>{const b=$('#notes');b.classList.toggle('hide');if(b.classList.contains('hide'))return;
@@ -28,7 +28,9 @@ const views={
 async dashboard(){const[s,r]=await Promise.all([api('/dashboard'),api('/requests')]);const by={};r.forEach(x=>by[x.category]=(by[x.category]||0)+x.quantity_kg);const mx=Math.max(1,...Object.values(by));
  $('#view').innerHTML=`<div class="grid4"><div class="card stat lead"><span>Total waste reported</span><strong>${kg(s.reported)}</strong></div><div class="card stat"><span>Collected</span><strong>${kg(s.collected)}</strong></div><div class="card stat"><span>Recycled</span><strong>${kg(s.recycled)}</strong></div><div class="card stat"><span>Pending requests</span><strong>${s.pending}</strong></div></div>
  <div class="two"><div class="card"><h3>Waste by type</h3>${Object.entries(by).map(([k,v])=>`<div class="bar"><span>${k}</span><div><i style="width:${v/mx*100}%"></i></div><b>${kg(v)}</b></div>`).join('')||'<p class="empty">No waste reported yet.</p>'}</div>
- <div class="card"><h3 style="margin-bottom:.6rem">Latest activity</h3>${r.slice(0,5).map(x=>`<p style="display:flex;justify-content:space-between;margin:.6rem 0"><span>#${x.id} ${x.category}</span>${pill(x.status)}</p>`).join('')||'<p class="empty">No requests yet.</p>'}</div></div>`},
+ <div class="card"><h3 style="margin-bottom:.6rem">Latest activity</h3>${r.slice(0,5).map(x=>`<p style="display:flex;justify-content:space-between;margin:.6rem 0"><span>#${x.id} ${x.category}</span>${pill(x.status)}</p>`).join('')||'<p class="empty">No requests yet.</p>'}</div></div>`;
+ if(me.role==='farmer')api('/agripoints/summary').then(s=>{if(page!=='dashboard')return;$('#view').insertAdjacentHTML('beforeend',`<a href="/agripoints" class="card" style="display:flex;align-items:center;gap:1rem;margin-top:1.2rem;text-decoration:none;color:inherit"><span style="width:48px;height:48px;border-radius:50%;background:var(--wheat);display:grid;place-items:center;font-size:1.4rem">🍃</span><div style="flex:1"><b>AgriPoints</b><div style="color:var(--mute);font-size:.88rem">Earn reward points for collected and recycled waste</div></div><strong style="font-family:'Bricolage Grotesque',serif;font-size:1.6rem">${s.balance} pts ›</strong></a>`)}).catch(()=>{})
+},
 async new(){$('#view').innerHTML=`<form class="card" id="rf" style="max-width:640px"><div class="row"><div class="field"><label for="cat">Waste type</label><select id="cat">${cats.map(c=>`<option value="${c.id}">${c.name}</option>`).join('')}</select></div>
  <div class="field"><label for="qty">Quantity (kg)</label><input id="qty" type="number" min="1" step="any" required placeholder="e.g. 500"></div></div><div class="tip" id="tip"></div>
  <div class="field"><label for="addr">Pickup location</label><input id="addr" required placeholder="Village, road or landmark"></div>
