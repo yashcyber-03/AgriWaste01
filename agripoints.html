@@ -1,0 +1,13 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/agripoints_frontend/css/agripoints.css"><title>AgriPoints · AgriWaste</title></head><body data-page="home">
+<header class="ap-bar"><div class="ap-logo"><i>🌾</i>AgriWaste</div><nav style="display:flex;gap:1.2rem"><a href="/">← Back to dashboard</a><a href="#" id="signout">Sign out</a></nav></header>
+<main class="ap-wrap" id="root"><div class="ap-head"><h1>AgriPoints</h1><p>Reward credits you earn for responsible waste management.</p></div>
+<div id="content" hidden>
+ <section class="ap-card ap-hero"><div class="ap-coin" aria-hidden="true">🍃</div><div><small>Current balance</small><strong><span id="bal">0</span> pts</strong></div></section>
+ <div class="ap-grid"><div class="ap-card ap-stat"><span>Total points earned</span><strong id="earned">0</strong></div><div class="ap-card ap-stat"><span>Earned this month</span><strong id="month">0</strong></div></div>
+ <div class="ap-two"><section class="ap-card"><h3>How to earn AgriPoints</h3><div id="rules" style="margin-top:.6rem"></div>
+  <p class="ap-note">Points are credited automatically after your request is verified. AgriPoints are platform reward credits, not cash, and cannot be withdrawn.</p></section>
+ <div style="display:grid;gap:1rem;align-content:start"><section class="ap-card ap-soon"><h3>Coming Soon</h3><p style="margin:0 0 .8rem">Redeem AgriPoints for Farming Equipment.</p><button class="ap-btn" disabled>Redeem (not yet available)</button></section>
+  <a class="ap-btn" href="/agripoints/transactions" style="text-align:center">View transaction history</a></div></div>
+</div></main><script src="/agripoints_frontend/js/agripoints.js"></script></body></html>
