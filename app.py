@@ -95,6 +95,7 @@ def init_db():
                 (1, 3, 600, "Village Patas", "accepted")]
         for f, c, q, a, s in seed:
             con.execute("INSERT INTO requests(farmer_id,category_id,quantity_kg,address,status,worker_id) VALUES(?,?,?,?,?,2)", (f, c, q, a, s))
+        con.execute("UPDATE users SET phone='+91 98765 43210' WHERE email='farmer@demo.com'")
         con.commit()
     con.close()
 init_db()
@@ -166,7 +167,7 @@ def add_request():
 @app.get("/api/requests")
 @auth()
 def list_requests():
-    q = """SELECT r.*, c.name AS category, u.name AS farmer, f.rating FROM requests r
+    q = """SELECT r.*, c.name AS category, u.name AS farmer, u.email AS farmer_email, u.phone AS farmer_phone, f.rating FROM requests r
            JOIN categories c ON c.id=r.category_id JOIN users u ON u.id=r.farmer_id
            LEFT JOIN feedback f ON f.request_id=r.id"""
     args = ()
@@ -243,6 +244,9 @@ def del_user(uid):
     if uid == g.user["id"]: return jsonify(error="You can't delete your own account."), 400
     db().execute("DELETE FROM users WHERE id=?", (uid,)); db().commit()
     return jsonify(ok=True)
+
+import agripoints  # AgriPoints add-on (separate module, own tables and pages)
+agripoints.register(app, DB, auth, db)
 
 @app.get("/")
 def home():
