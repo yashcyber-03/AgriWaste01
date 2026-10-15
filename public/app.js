@@ -14,7 +14,7 @@ $('#authForm').onsubmit=async e=>{e.preventDefault();try{
  await signin(email.value,password.value)}catch(x){$('#err').textContent=x.message}};
 document.querySelectorAll('[data-demo]').forEach(b=>b.onclick=()=>signin(b.dataset.demo,'demo123').catch(x=>$('#err').textContent=x.message));
 async function signin(e,p){const d=await api('/login','POST',{email:e,password:p});localStorage.tok=d.token;localStorage.me=JSON.stringify(d.user);me=d.user;start()}
-function out(){localStorage.removeItem('tok');location.reload()}$('#logout').onclick=out;
+function out(){localStorage.removeItem('tok');location.reload()}$('#logout').onclick=out;$('#logoutTop').onclick=out;
 async function start(){$('#auth').classList.add('hide');$('#app').classList.remove('hide');$('#meName').textContent=me.name;$('#meRole').textContent=me.role;
  cats=await api('/categories');$('#nav').innerHTML=menus[me.role].map(([k,i,t])=>`<button class="nav" data-p="${k}">${i} ${t}</button>`).join('');
  document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>go(b.dataset.p));go('dashboard');pollNotes();setInterval(pollNotes,30000)}
